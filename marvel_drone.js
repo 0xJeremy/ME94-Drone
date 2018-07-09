@@ -7,20 +7,24 @@ var readline = require('readline-sync');
 // var py = spawn('python', ['get_position.py']);
 var PythonShell = require('python-shell');
 var pyshell = new PythonShell('get_position.py');
+const fs = require('fs');
+
 
 var drone_position;
 
-function get_position() {
-	pyshell.on('message', function(message) {
-		console.log("1: " + message)
-	});
-	pyshell.end(function (err) {
-		if(err) {
-			throw err;
-		};
-		console.log("Finished.");
-	});
-}
+// function get_position() {
+// 	pyshell.on('message', function(message) {
+// 		console.log("1: " + message);
+// 		drone_position = JSON.parse(message);
+// 	});
+// 	pyshell.end(function (err) {
+// 		if(err) {
+// 			throw err;
+// 		};
+// 		console.log("Finished.");
+// 	});
+// 	return drone_position;
+// }
 
 // function get_position() {
 // 	py.stdout.on('data', function(data) {
@@ -46,9 +50,13 @@ function flight_value(current, desired) {
 	}
 }
 
-get_position();
-console.log("Bottom");
-get_position();
+// get_position();
+// console.log("Bottom");
+// console.log("This: " + get_position());
+
+var text = fs.readFileSync('drone_position.txt', 'utf8');
+console.log(text);
+process.exit(1);
 
 // while(true) {
 // 	drone_position = get_position();

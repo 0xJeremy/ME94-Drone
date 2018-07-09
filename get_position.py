@@ -28,6 +28,9 @@ def main():
     print (jsonData) # get last position and print
     with suppress_stdout():
         hedge.stop()
+    file = open("drone_position.txt", "w")
+    file.write(jsonData)
+    file.close()
     # while True:
     #     try:
     #         sleep(1)
