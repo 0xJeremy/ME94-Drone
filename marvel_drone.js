@@ -10,8 +10,9 @@ var drone_position;
 
 function get_position() {
 	py.stdout.on('data', function(data) {
+		console.log("Raw: " + JSON.parse(data).x);
 		drone_position = JSON.parse(data.toString());
-		console.log(drone_position);
+		console.log("Position: " + drone_position.x);
 	});
 	py.stdin.end();
 	return drone_position;
@@ -31,7 +32,9 @@ function flight_value(current, desired) {
 	}
 }
 
+console.log("1");
 get_position();
+console.log("2");
 
 // while(true) {
 // 	drone_position = get_position();
