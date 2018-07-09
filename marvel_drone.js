@@ -31,6 +31,7 @@ function flight_value(current, desired) {
 	}
 }
 
+get_position();
 
 // while(true) {
 // 	drone_position = get_position();
