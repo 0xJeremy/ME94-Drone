@@ -3,19 +3,38 @@ var client = arDrone.createClient();
 var https = require('https');
 var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 var readline = require('readline-sync');
-var spawn = require('child_process').spawnSync;
-var py = spawn('python', ['example.py']);
+// var spawn = require('child_process').spawn;
+// var py = spawn('python', ['get_position.py']);
+var PythonShell = require('python-shell');
+var pyshell = new PythonShell('get_position.py');
 
 var drone_position;
 
-function get_position() {
-	py.stdout.on('data', function(data) {
-		drone_position = JSON.parse(data.toString());
-		console.log(drone_position);
-	});
-	py.stdin.end();
-	return drone_position;
-}
+console.log("1: " + drone_position);
+PythonShell.run('get_position', function(err, stdout) {
+	drone_position = JSON.parse(stdout.toString());
+	console.log("2: " + drone_position);
+});
+console.log("3: " + drone_position);
+
+// pyshell.on('message', function(message) {
+// 	console.log(message);
+// 	drone_position = JSON.parse(message.toString());
+// 	return drone_position;
+// });
+// pyshell.end(function(err, code, signal) {
+// 	if (err) throw err;
+// 	console.log("Finished: " + drone_position);
+// });
+
+// function get_position() {
+// 	py.stdout.on('data', function(data) {
+// 		drone_position = JSON.parse(data.toString());
+// 		console.log(drone_position);
+// 	});
+// 	py.stdin.end();
+// 	return drone_position;
+// }
 
 function flight_value(current, desired) {
 	var diff = current-desired;
@@ -30,8 +49,8 @@ function flight_value(current, desired) {
 		}
 	}
 }
-x = get_position();
-console.log("x is: " + x);
+
+
 // while(true) {
 // 	drone_position = get_position();
 // 	var desired_x = readline.question("Enter a desired x location: ");
