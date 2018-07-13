@@ -24,13 +24,14 @@ def main():
     data['y'] = x[1]
     data['z'] = x[2]
     data['time'] = x[3]
-    jsonData = json.dumps(data)
-    print (jsonData) # get last position and print
-    with suppress_stdout():
-        hedge.stop()
-    file = open("drone_position.txt", "w")
-    file.write(jsonData)
-    file.close()
+    print(data)
+    # jsonData = json.dumps(data)
+    # print (jsonData) # get last position and print
+    # with suppress_stdout():
+    #     hedge.stop()
+    # file = open("drone_position.txt", "w")
+    # file.write(jsonData)
+    # file.close()
     # while True:
     #     try:
     #         sleep(1)
