@@ -6,6 +6,8 @@ var arDrone = require('ar-drone');
 var client = arDrone.createClient();
 var flight_value;
 
+client.takeoff();
+
 function fly_drone(flight_value) {
 	console.log("YAAAAAY");
 	console.log(flight_value);

@@ -19,6 +19,8 @@ def calculate_flight_power(position, desired_position):
 		power = 0.1 * diff
 		if(power > 0.5):
 			return 0.5
+		else if(power < -0.5):
+			return -0.5
 		else:
 			return power
 
@@ -26,7 +28,6 @@ def main():
 	hedge = MarvelmindHedge(tty = "/dev/ttyACM0", adr=10, debug=False)
 	hedge.start()
 	socket_path = '/tmp/node-python-sock'
-	# connect to the unix local socket with a stream type
 	client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 	client.connect(socket_path)
 	desired_x = get_desired_position('x')
