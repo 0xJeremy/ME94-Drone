@@ -36,40 +36,19 @@ def main():
 			sleep(1)
 			x = hedge.position()
 			data = {}
-			# data['x'] = x[0]
-			# data['y'] = x[1]
-			# data['z'] = x[2]
-			# data['time'] = x[3]
 			flight_x = calculate_flight_power(x[0], desired_x)
 			flight_y = calculate_flight_power(x[1], desired_y)
-			# if(flight_x == 0 and flight_y == 0):
-			# 	desired_x = get_desired_position('x')
-			# 	desired_y = get_desired_position('y')
+			if(flight_x == 0 and flight_y == 0):
+				desired_x = get_desired_position('x')
+				desired_y = get_desired_position('y')
 			data['power_x'] = flight_x
 			data['power_y'] = flight_y
 			jsonData = json.dumps(data)
-			# Might need to send as bytes...
 			client.send(jsonData)
 		except KeyboardInterrupt:
 			client.close()
-			hedge.stop()  # stop and close serial port
+			hedge.stop()
 			sys.exit()
 
 if __name__=='__main__':
 	main()
-
-# # send an initial message (as bytes)
-# client.send(b'python connected')
-# # start a loop
-# while True:
-#	 # wait for a response and decode it from bytes
-#	 msg = client.recv(2048).decode('utf-8')
-#	 print(msg)
-#	 if msg == 'hi':
-#		 client.send(b'hello')
-#	 elif msg == 'end':
-#		 # exit the loop
-#		 break
-
-# # close the connection
-# client.close()
