@@ -30,16 +30,16 @@ def main():
 	socket_path = '/tmp/node-python-sock'
 	client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 	client.connect(socket_path)
-	start_position = hedge.position()
 	desired_x = get_desired_position('x')
 	desired_y = get_desired_position('y')
 	while True:
 		try:
 			sleep(1)
 			x = hedge.position()
+			print(x)
 			data = {}
-			flight_x = calculate_flight_power(x[0]-start_position[0], desired_x)
-			flight_y = calculate_flight_power(x[1]-start_position[1], desired_y)
+			flight_x = calculate_flight_power(x[1], desired_x)
+			flight_y = calculate_flight_power(x[2], desired_y)
 			if(flight_x == 0 and flight_y == 0):
 				desired_x = get_desired_position('x')
 				desired_y = get_desired_position('y')
