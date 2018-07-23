@@ -9,18 +9,21 @@ var flight_value;
 client.takeoff();
 
 function fly_drone(flight_value) {
-	console.log("YAAAAAY");
 	console.log(flight_value);
 	if(flight_value.power_x < 0) {
-		client.left(flight_value.power_x);
+		console.log("Left " + flight_value.power_x);
+		client.left(-flight_value.power_x);
 	}
 	else {
+		console.log("Right " + flight_value.power_x);
 		client.right(flight_value.power_x);
 	}
 	if(flight_value.power_y < 0) {
-		client.back(flight_value.power_y);
+		console.log("Back " + flight_value.power_y);
+		client.back(-flight_value.power_y);
 	}
 	else {
+		console.log("Front " + flight_value.power_y);
 		client.front(flight_value.power_y);
 	}
 }

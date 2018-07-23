@@ -12,14 +12,14 @@ def get_desired_position(plane):
 
 def calculate_flight_power(position, desired_position):
 	diff = position - desired_position
-	margin = diff*0.05
-	if(diff <= margin):
+	margin = abs(diff*0.05)
+	if(abs(diff) <= margin):
 		return 0
 	else:
 		power = 0.1 * diff
 		if(power > 0.5):
 			return 0.5
-		else if(power < -0.5):
+		elif(power < -0.5):
 			return -0.5
 		else:
 			return power
@@ -30,6 +30,7 @@ def main():
 	socket_path = '/tmp/node-python-sock'
 	client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 	client.connect(socket_path)
+	start_position = hedge.position()
 	desired_x = get_desired_position('x')
 	desired_y = get_desired_position('y')
 	while True:
@@ -37,8 +38,8 @@ def main():
 			sleep(1)
 			x = hedge.position()
 			data = {}
-			flight_x = calculate_flight_power(x[0], desired_x)
-			flight_y = calculate_flight_power(x[1], desired_y)
+			flight_x = calculate_flight_power(x[0]-start_position[0], desired_x)
+			flight_y = calculate_flight_power(x[1]-start_position[1], desired_y)
 			if(flight_x == 0 and flight_y == 0):
 				desired_x = get_desired_position('x')
 				desired_y = get_desired_position('y')
