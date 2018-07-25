@@ -30,19 +30,18 @@ def main():
 	socket_path = '/tmp/node-python-sock'
 	client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 	client.connect(socket_path)
-	desired_x = get_desired_position('x')
-	desired_y = get_desired_position('y')
+	desired_x, desired_y, flight_x, flight_y = 0, 0, 0, 0
 	while True:
 		try:
 			sleep(1)
 			x = hedge.position()
-			print(x)
+			if(flight_x == 0 and flight_y == 0):
+				print(x)
+				desired_x = get_desired_position('x')
+				desired_y = get_desired_position('y')
 			data = {}
 			flight_x = calculate_flight_power(x[1], desired_x)
 			flight_y = calculate_flight_power(x[2], desired_y)
-			if(flight_x == 0 and flight_y == 0):
-				desired_x = get_desired_position('x')
-				desired_y = get_desired_position('y')
 			data['power_x'] = flight_x
 			data['power_y'] = flight_y
 			jsonData = json.dumps(data)
