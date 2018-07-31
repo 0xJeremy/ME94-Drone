@@ -45,7 +45,6 @@ def rotate(origin, point, angle):
     return qx, qy
 
 def main():
-
 	# Setup for MarvelMind and data socket
 	hedge = MarvelmindHedge(tty = "/dev/ttyACM0", adr=10, debug=False)
 	hedge.start()
@@ -58,31 +57,44 @@ def main():
 	data = {}
 	prev_position = []
 	data_log = []
+	data_log_raw = []
 	first_run = True
+
+	# Used to rotate data. 'rotation' is in degrees
 	rotation = 136
 	origin = (0, 0)
 
 	# Loop to get location and fly drone
 	while True:
 		try:
+			# Sleep delay. Change to change update speed
 			sleep(1)
 
 			# Code to run the first time
 			if(first_run):
+				# Gets initial position and rotates it
 				initial_position = hedge.position()
+				point = (initial_position[1], initial_position[2])
+				initial_position[1], initial_position[2] = rotate(origin, point, rotation)
+
+				# Sets the previous position
 				prev_position = initial_position
-				point = (prev_position[1], prev_position[2])
-				prev_position[1], prev_position[2] = rotate(origin, point, rotation)
+
 				first_run = False
 
-			# Gets drone position and smooths data
+			# Gets drone position
 			position = hedge.position()
-			position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
-			position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
 
 			# Rotates the drone position
 			point = (position[1], position[2])
 			position[1], position[2] = rotate(origin, point, rotation)
+
+			# Adds positiion data to raw data log
+			data_log_raw.append((position[1], position[2], position[4]))
+
+			# Smooths position data
+			position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
+			position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
 
 			# Adds position data to data log
 			data_log.append((position[1], position[2], position[4]))
