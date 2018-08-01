@@ -6,6 +6,7 @@ from contextlib import contextmanager
 import sys, os
 import socket
 import math
+import copy
 
 # Gets user input for position
 def get_desired_position(plane):
@@ -73,7 +74,7 @@ def main():
 			# Code to run the first time
 			if(first_run):
 				# Gets initial position and rotates it
-				initial_position = hedge.position()
+				initial_position = copy.deepcopy(hedge.position())
 				initial_point = (initial_position[1], initial_position[2])
 				initial_position[1], initial_position[2] = rotate(origin, point, rotation)
 
