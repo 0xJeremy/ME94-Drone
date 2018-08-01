@@ -2,6 +2,7 @@ from marvelmind import MarvelmindHedge
 from time import sleep
 import sys
 import math
+import copy
 
 def rotate(origin, point, angle):
     ox, oy = origin
@@ -17,21 +18,27 @@ def main():
     rotation = 2.37365
     first_run = True
     initial_position = []
+    position = []
     while True:
         try:
             sleep(1)
             if(first_run):
-                initial_position = hedge.position()
+                initial_position = copy.deepcopy(hedge.position())
                 initial_point = (initial_position[1], initial_position[2])
                 initial_position[1], initial_position[2] = rotate(origin, initial_point, rotation)
+                print("INITIAL POSITION: " + str(initial_position))
                 first_run = False
             # print (hedge.position()) # get last position and print
             position = hedge.position()
-            print("Position Raw: " + str(position))
             point = (position[1], position[2])
+            print("Initial Position 0: " + str(initial_position))
             position[1], position[2] = rotate(origin, point, rotation)
-            position[1], position[2] = position[1]-initial_position[1], position[2]-initial_position[2]
-            print(position)
+            print("Initial Position 1: " + str(initial_position))
+            position[1] = position[1] - initial_position[1]
+            print("Initial Position 2: " + str(initial_position))
+            # position[2] = position[2] - initial_position[2]
+            # position[1], position[2] = position[1]-initial_position[1], position[2]-initial_position[2]
+            # print(position)
         except KeyboardInterrupt:
             hedge.stop()  # stop and close serial port
             sys.exit()
