@@ -29,10 +29,8 @@ def main():
             position = hedge.position()
             print("Position Raw: " + str(position))
             point = (position[1], position[2])
-            print("Initial Position 1: " + str(initial_position))
             position[1], position[2] = rotate(origin, point, rotation)
-            print("Initial Position 2: " + str(initial_position))
-            #position[1], position[2] = position[1]-initial_position[1], position[2]-initial_position[2]
+            position[1], position[2] = position[1]-initial_position[1], position[2]-initial_position[2]
             print(position)
         except KeyboardInterrupt:
             hedge.stop()  # stop and close serial port
