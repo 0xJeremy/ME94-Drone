@@ -21,8 +21,7 @@ def main():
         try:
             sleep(1)
             if(first_run):
-                #initial_position = hedge.position()
-                initial_position = [1, -1.730340742822458, -5.521727801488283, -0.15, 1840834]
+                initial_position = hedge.position()
                 initial_point = (initial_position[1], initial_position[2])
                 initial_position[1], initial_position[2] = rotate(origin, initial_point, rotation)
                 first_run = False
