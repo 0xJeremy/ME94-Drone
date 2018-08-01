@@ -59,6 +59,8 @@ def main():
 	prev_position = []
 	data_log = []
 	data_log_raw = []
+	initial_position = []
+	position = []
 	first_run = True
 
 	# Used to rotate data. 'rotation' is in radians
@@ -76,7 +78,7 @@ def main():
 				# Gets initial position and rotates it
 				initial_position = copy.deepcopy(hedge.position())
 				initial_point = (initial_position[1], initial_position[2])
-				initial_position[1], initial_position[2] = rotate(origin, point, rotation)
+				initial_position[1], initial_position[2] = rotate(origin, initial_point, rotation)
 
 				# Sets the previous position
 				prev_position = initial_position
@@ -96,8 +98,8 @@ def main():
 			data_log_raw.append((position[1], position[2], position[4]))
 
 			# Smooths position data
-			position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
-			position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
+			# position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
+			# position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
 
 			# Adds position data to data log
 			data_log.append((position[1], position[2], position[4]))
