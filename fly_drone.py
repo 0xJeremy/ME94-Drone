@@ -60,8 +60,8 @@ def main():
 	data_log_raw = []
 	first_run = True
 
-	# Used to rotate data. 'rotation' is in degrees
-	rotation = 136
+	# Used to rotate data. 'rotation' is in radians
+	rotation = 2.37365
 	origin = (0, 0)
 
 	# Loop to get location and fly drone
@@ -74,11 +74,13 @@ def main():
 			if(first_run):
 				# Gets initial position and rotates it
 				initial_position = hedge.position()
-				point = (initial_position[1], initial_position[2])
+				initial_point = (initial_position[1], initial_position[2])
 				initial_position[1], initial_position[2] = rotate(origin, point, rotation)
 
 				# Sets the previous position
 				prev_position = initial_position
+
+				print("Initial Position: " + str(initial_position))
 
 				first_run = False
 
