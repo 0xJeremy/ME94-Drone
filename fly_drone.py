@@ -30,10 +30,15 @@ def calculate_flight_power(position, desired_position):
 
 # Smoothes incoming data from MarvelMind
 def smooth_data(previous, current):
-	diff = current - previous
-	if(diff > (previous*0.1)):
+	# diff = current - previous
+	# if(diff > (previous*0.1)):
+	# 	return (previous*1.1)
+	# if(diff < -(previous*0.1)):
+	# 	return (previous*0.9)
+	# return current
+	if(current > (previous*1.1)):
 		return (previous*1.1)
-	if(diff < -(previous*0.1)):
+	if(current < (previous*0.9)):
 		return (previous*0.9)
 	return current
 
@@ -105,7 +110,7 @@ def main():
 			data_log.append((position[1], position[2], position[4]))
 
 			# Sets current value as previous value
-			prev_position = position
+			prev_position = copy.deepcopy(position)
 
 			# Displays location
 			print(position)
