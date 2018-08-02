@@ -30,12 +30,6 @@ def calculate_flight_power(position, desired_position):
 
 # Smoothes incoming data from MarvelMind
 def smooth_data(previous, current):
-	# diff = current - previous
-	# if(diff > (previous*0.1)):
-	# 	return (previous*1.1)
-	# if(diff < -(previous*0.1)):
-	# 	return (previous*0.9)
-	# return current
 	if(current > (previous*1.1)):
 		return (previous*1.1)
 	if(current < (previous*0.9)):
@@ -69,7 +63,7 @@ def main():
 	first_run = True
 
 	# Used to rotate data. 'rotation' is in radians
-	rotation = 2.37365
+	rotation = 1.65806 #2.37365
 	origin = (0, 0)
 
 	# Loop to get location and fly drone
@@ -103,8 +97,8 @@ def main():
 			data_log_raw.append((position[1], position[2], position[4]))
 
 			# Smooths position data
-			# position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
-			# position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
+			position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
+			position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
 
 			# Adds position data to data log
 			data_log.append((position[1], position[2], position[4]))
