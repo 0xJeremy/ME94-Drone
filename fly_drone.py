@@ -16,15 +16,17 @@ def get_desired_position(plane):
 # Calculates the amount of thrust power
 def calculate_flight_power(position, desired_position):
 	diff = desired_position - position
-	margin = abs(diff*0.05)
+	if(abs(diff) <= 0.3):
+		return 0
+	margin = abs(diff*0.2)
 	if(abs(diff) <= margin):
 		return 0
 	else:
-		power = 0.05 * diff
-		if(power > 0.5):
-			return 0.5
-		elif(power < -0.5):
-			return -0.5
+		power = 0.020 * diff
+		if(power > 0.20):
+			return 0.20
+		elif(power < -0.20):
+			return -0.20
 		else:
 			return power
 
@@ -63,14 +65,15 @@ def main():
 	first_run = True
 
 	# Used to rotate data. 'rotation' is in radians
-	rotation = 1.65806 #2.37365
+	rotation = 1.5708 #2.37365
 	origin = (0, 0)
+	f = open("flight_data.txt", "w")
 
 	# Loop to get location and fly drone
 	while True:
 		try:
 			# Sleep delay. Change to change update speed
-			sleep(1)
+			sleep(0.4)
 
 			# Code to run the first time
 			if(first_run):
@@ -80,7 +83,7 @@ def main():
 				initial_position[1], initial_position[2] = rotate(origin, initial_point, rotation)
 
 				# Sets the previous position
-				prev_position = initial_position
+				prev_position = copy.deepcopy(initial_position)
 
 				print("Initial Position: " + str(initial_position))
 
@@ -97,11 +100,13 @@ def main():
 			data_log_raw.append((position[1], position[2], position[4]))
 
 			# Smooths position data
-			position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
-			position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
+			position[1], position[2] = position[1]-initial_position[1], position[2]-initial_position[2]
+			# position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
+			# position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
 
 			# Adds position data to data log
-			data_log.append((position[1], position[2], position[4]))
+			# data_log.append((position[1], position[2], position[4]))
+			f.write(str(position[1]) + ", " + str(position[2]) + "\n")
 
 			# Sets current value as previous value
 			prev_position = copy.deepcopy(position)
@@ -111,6 +116,11 @@ def main():
 
 			# Prompts user for desired flight location
 			if(flight_x == 0 and flight_y == 0):
+				data['power_x'] = 0
+				data['power_y'] = 0
+				data['time'] = position[4]
+				jsonData = json.dumps(data)
+				client.send(jsonData)
 				desired_x = get_desired_position('x')
 				desired_y = get_desired_position('y')
 

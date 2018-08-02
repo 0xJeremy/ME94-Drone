@@ -15,7 +15,7 @@ def main():
     hedge = MarvelmindHedge(tty = "/dev/ttyACM0", adr=10, debug=False) # create MarvelmindHedge thread
     hedge.start() # start thread
     origin = (0, 0)
-    rotation = 1.65806 #2.37365
+    rotation = 1.5708 #2.37365
     first_run = True
     initial_position = []
     position = []
