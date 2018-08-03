@@ -63,6 +63,7 @@ def main():
 	initial_position = []
 	position = []
 	first_run = True
+	location_counter = 0
 
 	# Used to rotate data. 'rotation' is in radians
 	rotation = 1.5708 #2.37365
@@ -106,7 +107,7 @@ def main():
 
 			# Adds position data to data log
 			# data_log.append((position[1], position[2], position[4]))
-			f.write(str(position[1]) + ", " + str(position[2]) + "\n")
+			f.write(str(position[1]) + ", " + str(position[2]) + ", " + str(location_counter) + "\n")
 
 			# Sets current value as previous value
 			prev_position = copy.deepcopy(position)
@@ -123,6 +124,7 @@ def main():
 				client.send(jsonData)
 				desired_x = get_desired_position('x')
 				desired_y = get_desired_position('y')
+				location_counter += 1
 
 			# Calculates the drone power
 			flight_x = calculate_flight_power(position[1], desired_x)
