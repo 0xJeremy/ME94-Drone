@@ -32,7 +32,7 @@ def calculate_flight_power(position, desired_position):
 
 # Smoothes incoming data from MarvelMind
 def smooth_data(previous, current):
-	return ((previous*0.7) + (current*0.3))
+	return ((previous*0.75) + (current*0.25))
 
 # Rotates MarvelMind data around the origin
 def rotate(origin, point, angle):
@@ -113,11 +113,14 @@ def main():
 
 			# Prompts user for desired flight location
 			if(flight_x == 0 and flight_y == 0):
+				# Sends 0 power commands to quad
 				data['power_x'] = 0
 				data['power_y'] = 0
 				data['time'] = position[4]
 				jsonData = json.dumps(data)
 				client.send(jsonData)
+
+				# Gets location from user
 				desired_x = get_desired_position('x')
 				desired_y = get_desired_position('y')
 				location_counter += 1
