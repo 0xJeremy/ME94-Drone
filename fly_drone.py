@@ -32,11 +32,7 @@ def calculate_flight_power(position, desired_position):
 
 # Smoothes incoming data from MarvelMind
 def smooth_data(previous, current):
-	if(current > (previous*1.1)):
-		return (previous*1.1)
-	if(current < (previous*0.9)):
-		return (previous*0.9)
-	return current
+	return ((previous*0.7) + (current*0.3))
 
 # Rotates MarvelMind data around the origin
 def rotate(origin, point, angle):
@@ -102,8 +98,8 @@ def main():
 
 			# Smooths position data
 			position[1], position[2] = position[1]-initial_position[1], position[2]-initial_position[2]
-			# position[1] = smooth_data(prev_position[1], position[1]-initial_position[1])
-			# position[2] = smooth_data(prev_position[2], position[2]-initial_position[2])
+			position[1] = smooth_data(prev_position[1], position[1])
+			position[2] = smooth_data(prev_position[2], position[2])
 
 			# Adds position data to data log
 			# data_log.append((position[1], position[2], position[4]))
