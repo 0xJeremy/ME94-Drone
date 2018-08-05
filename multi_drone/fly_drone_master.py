@@ -13,9 +13,10 @@ rotation = 1.5708
 origin = (0, 0) 
 
 # Gets user input for position
-def get_desired_position(plane):
-	desired_pos = input('Enter desired ' + plane + ' coordinate: ')
-	return desired_pos
+def get_desired_position():
+	x = input('Enter desired x coordinate: ')
+	y = input('Enter desired y coordinate: ')
+	return x, y
 
 # Calculates the amount of thrust power
 def calculate_flight_power(position, desired_position):
@@ -62,35 +63,53 @@ def calculate_position(position, prev_position, initial_position):
 	position[2] = smooth_data(prev_position[2], position[2])
 	return position
 
-def send_zero_power(client):
-	data['power_x'] = 0
-	data['power_y'] = 0
-	data['time'] = position[4]
+def send_power(client, x, y, time):
+	data['power_x'] = x
+	data['power_y'] = y
+	data['time'] = time
 	jsonData = json.dumps(data)
 	client.send(jsonData)
 
+def get_json_data(position, x, y):
+	data['power_x'] = calculate_flight_power(position[1], x)
+	data['power_y'] = calculate_flight_power(position[2], y)
+	data['time'] = position[4]
+	jsonData = json.dumps(data)
+	return jsonData
 
 
 def main():
 	# Setup for MarvelMind and data socket
 	hedge = MarvelmindHedge(tty = "/dev/ttyACM0", adr=10, debug=False)
 	hedge.start()
+
+	# Local JavaScript Socket
 	socket_path = '/tmp/node-python-sock'
 	client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 	client.connect(socket_path)
 
+	# TCP Data Socket Master
+	TCP_IP = '127.0.0.1'
+	TCP_PORT = 5005
+	BUFFER_SIZE = 1024
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.bind((TCP_IP, TCP_PORT))
+	tcp, addr = s.accept()
+
 	# Variable declarations and initalization
-	desired_x, desired_y, flight_x, flight_y = 0, 0, 0, 0
-	data = {}
+	desired_x_1, desired_y_1, flight_x_1, flight_y_1 = 0, 0, 0, 0
+	desired_x_5, desired_y_5, flight_x_5, flight_y_5 = 0, 0, 0, 0
+	data_1, data_5 = {}, {}
 	prev_position_1, prev_position_5 = [], []
-	data_log = []
-	data_log_raw = []
-	initial_position = []
+	data_log_1, data_log_5 = [], []
+	data_log_raw_1, data_log_raw_5 = [], []
+	initial_position_1, initial_position_5 = [], []
 	position = []
 	first_run_1, first_run_5 = True
-	location_counter = 0
+	location_counter_1, location_counter_5 = 0, 0
 
-	f = open("flight_data.txt", "w")
+	f1 = open("flight_data_1.txt", "w")
+	f5 = open("flight_data_5.txt", "w")
 
 	# Loop to get location and fly drone
 	while True:
@@ -120,6 +139,7 @@ def main():
 			if(position[0] == 1 and first_run_1 == False):
 				position_1 = calculate_position(position, prev_position_1, initial_position_1)
 				prev_position_1 = copy.deepcopy(position_1)
+				print("1: " + str(position_1))
 
 			# Positioning for Hedgehog 5
 			elif(position[0] == 5 and first_run_5 == False):
@@ -127,26 +147,17 @@ def main():
 				prev_position_5 = copy.deepcopy(position_5)
 				print("5: " + str(position_5))
 
+			# TODO: Move contents into function and place in appropriate section above
 			# Prompts user for desired flight location
-
 			if(flight_x == 0 and flight_y == 0):
 				# Sends 0 power commands to quad
-				send_zero_power(client)
+				send_power(client, 0, 0, 0)
 
 				# Gets location from user
-				desired_x = get_desired_position('x')
-				desired_y = get_desired_position('y')
+				desired_x, desired_y = get_desired_position()
 				location_counter += 1
 
-			# Calculates the drone power
-			flight_x = calculate_flight_power(position[1], desired_x)
-			flight_y = calculate_flight_power(position[2], desired_y)
-
-			# Sets the flight values into a json format
-			data['power_x'] = flight_x
-			data['power_y'] = flight_y
-			data['time'] = position[4]
-			jsonData = json.dumps(data)
+			jsonData = get_json_data(position, desired_x, desired_y)
 
 			# Sends data to JavaScript (marvel_drone_socket.js)
 			client.send(jsonData)
@@ -154,6 +165,7 @@ def main():
 		# Ends infinite loop and closes threads
 		except KeyboardInterrupt:
 			client.close()
+			tcp.close()
 			hedge.stop()
 			sys.exit()
 
