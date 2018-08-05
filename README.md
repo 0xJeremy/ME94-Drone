@@ -1,1 +1,1 @@
-# ME94-Drone
+This repository contains the code to autonomously fly a Parrot AR 2.0 drone with the MarvelMind positioning system. This code was developed as part of a Tufts ME-94 Independent Undergraduate Research course.
