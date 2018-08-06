@@ -55,6 +55,7 @@ def calculate_initial_position(initial_position, hedge_number):
 	print("Initial Position " + str(hedge_number) + ": " + str(initial_position))
 	return initial_position
 
+# Calculates the relative positon of the drone
 def calculate_position(position, prev_position, initial_position):
 	point = (position[1], position[2])
 	position[1], position[2] = rotate(origin, point, rotation)
@@ -63,6 +64,7 @@ def calculate_position(position, prev_position, initial_position):
 	position[2] = smooth_data(prev_position[2], position[2])
 	return position
 
+# Sends a specified power to the drone
 def send_power(client, x, y, time):
 	data['power_x'] = x
 	data['power_y'] = y
@@ -70,13 +72,13 @@ def send_power(client, x, y, time):
 	jsonData = json.dumps(data)
 	client.send(jsonData)
 
+# Returns a json object with the position and the flight powers
 def get_json_data(position, x, y):
 	data['power_x'] = calculate_flight_power(position[1], x)
 	data['power_y'] = calculate_flight_power(position[2], y)
 	data['time'] = position[4]
 	jsonData = json.dumps(data)
 	return jsonData
-
 
 def main():
 	# Setup for MarvelMind and data socket
@@ -147,20 +149,32 @@ def main():
 				prev_position_5 = copy.deepcopy(position_5)
 				print("5: " + str(position_5))
 
-			# TODO: Move contents into function and place in appropriate section above
 			# Prompts user for desired flight location
-			if(flight_x == 0 and flight_y == 0):
+			if(flight_x_1 == 0 and flight_y_1 == 0):
 				# Sends 0 power commands to quad
 				send_power(client, 0, 0, 0)
 
 				# Gets location from user
-				desired_x, desired_y = get_desired_position()
-				location_counter += 1
+				desired_x_1, desired_y_1 = get_desired_position()
+				location_counter_1 += 1
 
-			jsonData = get_json_data(position, desired_x, desired_y)
+			if(flight_x_5 == 0 and flight_y_5 == 0):
+				# Sends 0 power commands to quad
+				send_power(tcp, 0, 0, 0)
+
+				# Gets location from user
+				desired_x_5, desired_y_5 = get_desired_position()
+				location_counter_5 += 1
+
+			# Gets jsonData
+			jsonData_1 = get_json_data(position_1, desired_x_1, desired_y_1)
+			jsonData_5 = get_json_data(position_5, desired_x_5, desired_y_5)
 
 			# Sends data to JavaScript (marvel_drone_socket.js)
-			client.send(jsonData)
+			client.send(jsonData_1)
+
+			# Sends data to TCP Client (Raspberry Pi)
+			tcp.send(jsonData_5)
 
 		# Ends infinite loop and closes threads
 		except KeyboardInterrupt:
