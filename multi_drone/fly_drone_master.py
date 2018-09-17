@@ -1,9 +1,9 @@
-import sys, json, numpy as np
+import sys, numpy as np
 import json
 from marvelmind import MarvelmindHedge
 from time import sleep
 from contextlib import contextmanager
-import sys, os
+import os
 import socket
 import math
 import copy

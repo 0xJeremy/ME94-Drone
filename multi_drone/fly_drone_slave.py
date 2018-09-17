@@ -1,8 +1,8 @@
-import sys, json, numpy as np
+import sys, numpy as np
 import json
 from time import sleep
 from contextlib import contextmanager
-import sys, os
+import os
 import socket
 
 def main():
@@ -20,7 +20,7 @@ def main():
 
 	while True:
 		try:
-			sleep(0.4)
+			sleep(0.25)
 
 			# Gets data from TCP socket
 			tcp_data = tcp.recv(BUFFER_SIZE)
