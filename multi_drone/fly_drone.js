@@ -18,7 +18,13 @@ function initialize_drone(drone) {
 	drone.right(0);
 }
 
+initialize_drone(drone1);
+initialize_drone(drone5);
+
 function fly_drone(drone, flight_value) {
+	if(flight_value.eland == 1) {
+		drone.land();
+	}
 	console.log(flight_value);
 	if(flight_value.power_x < 0) {
 		console.log("Back " + flight_value.power_x);

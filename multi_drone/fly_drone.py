@@ -29,6 +29,7 @@ class drone:
 		self.position = []
 		self.location_counter = 0
 		self.initial_position = []
+		self.eland = False
 		self.first_time = True
 
 	def fly(hedge):
@@ -74,6 +75,10 @@ class drone:
 		self.desired_x = input('Enter desired x coordinate: ')
 		self.desired_y = input('Enter desired y coordinate: ')
 
+	def set_desired(self, x, y):
+		self.desired_x = x
+		self.desired_y = y
+
 	def set_flight_power(self):
 		self.flight_x = calculate_flight_power(self.position[1], self.desired_x)
 		self.flight_y = calculate_flight_power(self.position[2], self.desired_y)
@@ -98,6 +103,7 @@ class drone:
 		data['drone_num'] = self.drone_num
 		data['power_x'] = self.flight_x
 		data['power_y'] = self.flight_y
+		data['eland'] = self.eland
 		jsonData = json.dumps(data)
 		client.send(jsonData)
 
@@ -123,6 +129,8 @@ def main():
 					quad.fly(hedge_pos)
 
 		except KeyboardInterrupt:
+			quad1.send_land()
+			quad5.send_land()
 			client.close()
 			hedge.stop()
 			sys.exit()
