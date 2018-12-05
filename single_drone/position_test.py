@@ -21,7 +21,7 @@ def main():
     position = []
     while True:
         try:
-            sleep(1)
+            sleep(0.125)
             if(first_run):
                 initial_position = copy.deepcopy(hedge.position())
                 initial_point = (initial_position[1], initial_position[2])

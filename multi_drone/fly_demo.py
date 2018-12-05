@@ -11,6 +11,9 @@ import copy
 ROTATION = 1.5708
 ORIGIN = (0,0)
 
+DEMOX = [0, 0.75, -0.75, 0]
+DEMOY = [0, 0.75, -0.75, 0]
+
 socket_path = '/tmp/node-python-sock'
 client = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 client.connect(socket_path)
@@ -58,6 +61,7 @@ class drone:
 		self.position = [0, 0, 0]
 		self.eland = 0
 		self.first_run = True
+		self.demo_counter = 0
 
 	def fly(self, hedge):
 		self.calculate_position(hedge)
@@ -80,7 +84,9 @@ class drone:
 
 	def check_input_need(self):
 		if(self.flight_x == 0 and self.flight_y == 0):
-			self.request_position()
+			self.desired_x = DEMOX[self.demo_counter]
+			self.desired_y = DEMOY[self.demo_counter]
+			self.demo_counter += 1
 
 	def request_position(self):
 		print("Currently controlling drone number " + str(self.drone_num))
@@ -114,9 +120,9 @@ def main():
 
 	swarm = []
 	quad1 = drone(1)
-	quad5 = drone(5)
+	# quad5 = drone(5)
 	swarm.append(quad1)
-	swarm.append(quad5)
+	# swarm.append(quad5)
 
 	while True:
 		try:
@@ -134,7 +140,7 @@ def main():
 
 		except KeyboardInterrupt:
 			quad1.send_land()
-			quad5.send_land()
+			# quad5.send_land()
 			client.close()
 			hedge.stop()
 			sys.exit()

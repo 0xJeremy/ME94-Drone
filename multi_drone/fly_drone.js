@@ -6,7 +6,7 @@ var arDrone = require('ar-drone');
 var flight_value;
 
 drone1 = arDrone.createClient({'ip': '192.168.1.10'})
-drone5 = arDrone.createClient({'ip': '192.168.1.11'})
+// drone5 = arDrone.createClient({'ip': '192.168.1.11'})
 
 function initialize_drone(drone) {
 	drone.disableEmergency();
@@ -19,7 +19,7 @@ function initialize_drone(drone) {
 }
 
 initialize_drone(drone1);
-initialize_drone(drone5);
+// initialize_drone(drone5);
 
 function fly_drone(drone, flight_value) {
 	if(flight_value.eland == 1) {
@@ -52,9 +52,9 @@ const handler = (socket) => {
 		if(flight_value.drone_num == 1) {
 			fly_drone(drone1, flight_value)
 		}
-		else if(flight_value.drone_num == 5) {
-			fly_drone(drone5, flight_value)
-		}
+		// else if(flight_value.drone_num == 5) {
+		// 	fly_drone(drone5, flight_value)
+		// }
 	});
 };
 
